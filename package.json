@@ -1,0 +1,25 @@
+{
+  "name": "imgen",
+  "version": "1.0.0",
+  "description": "generate images for classification and localization",
+  "main": "gen.js",
+  "scripts": {
+    "gen": "node gen.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alireza-a/imgen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alireza-a/imgen/issues"
+  },
+  "homepage": "https://github.com/alireza-a/imgen#readme",
+  "dependencies": {
+    "d3": "^4.8.0",
+    "jsdom": "^9.12.0",
+    "webshot": "^0.18.0"
+  }
+}
