@@ -28,4 +28,4 @@ svg.append('circle')
     .attr('r', 40)
     .attr('fill', '#8F8F8F');
 
-webshot(doc.body.innerHTML, 'hello_world.png', options, (err) => {});
+webshot(doc.body.innerHTML, 'targets/hello_world.png', options, (err) => {});
