@@ -1,1 +1,5 @@
 node_modules
+background
+targets
+*.jpg
+*.png
