@@ -4,28 +4,41 @@ const webshot = require('webshot');
 const jsdom = require('jsdom');
 const d3 = require('d3');
 
+// SGV Dimontions
 const
-    width = 800,
-    hight = 400;
+    bg_w = 800,
+    bg_h = 400;
 
+// WebShot Options
 const options = {
     shotSize: {
-        width: width,
-        height: hight
+        width: bg_w,
+        height: bg_h
     },
     siteType: 'html'
 }
 
+// DOM
 let doc = jsdom.jsdom();
 let svg = d3.select(doc.body)
     .append('svg')
-    .attr('width', width)
-    .attr('height', hight)
-    
-svg.append('circle')
-    .attr('cx', width / 2)
-    .attr('cy', hight / 2)
-    .attr('r', 40)
-    .attr('fill', '#8F8F8F');
+    .attr('width', bg_w)
+    .attr('height', bg_w)
 
-webshot(doc.body.innerHTML, 'targets/hello_world.png', options, (err) => {});
+// Target
+let c_r = 40;
+
+let target = svg.append('g')
+    .attr('transform', 'translate(' + c_r  + ',' + c_r + ')');
+
+target.append('circle')
+    .attr('r', c_r)
+    .attr('fill', 'green');
+    
+target.append('text')
+    .text('A')
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'middle')
+    .attr('font-size', 40);
+
+webshot(doc.body.innerHTML, 'targets/hello_world.png', options, (err) => { console.log(err) });
