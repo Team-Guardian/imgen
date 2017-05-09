@@ -1,8 +1,9 @@
 'use strict';
 
-const webshot = require('webshot');
-const jsdom = require('jsdom');
-const d3 = require('d3');
+const webshot = require('webshot'),
+jsdom = require('jsdom'), 
+d3 = require('d3'), 
+fs = require("fs");
 
 // SGV Dimontions
 const
@@ -17,14 +18,15 @@ const options = {
     },
     siteType: 'html'
 }
-
+//load html file in
+let htmlDoc = fs.readFileSync("html/index.html","utf8");
 // DOM
-let doc = jsdom.jsdom();
-let svg = d3.select(doc.body)
+let doc = jsdom.jsdom(htmlDoc);
+let svg = d3.select(doc.getElementById("test"))
     .append('svg')
     .attr('width', bg_w)
     .attr('height', bg_w)
-
+console.log(doc.body);
 // Target
 let c_r = 40;
 
@@ -41,4 +43,12 @@ target.append('text')
     .attr('dominant-baseline', 'middle')
     .attr('font-size', 40);
 
-webshot(doc.body.innerHTML, 'targets/hello_world.png', options, (err) => { console.log(err) });
+
+//uri of images to use for the bg make sure it's high rez
+const imagesUri = ["https://www.lawnstarter.com/blog/wp-content/uploads/2015/01/Yellow-st-augustine-lawn.jpg","http://eskipaper.com/images/grass-3.jpg"]
+for (var j = 0; j < imagesUri.length; j++){
+    doc.getElementById("img1").src = imagesUri[j];
+    webshot(doc.documentElement.outerHTML, `targets/hello_world${j}.png`, options, (err) => { console.log(err) });
+}
+
+//webshot(doc.documentElement.outerHTML, 'targets/hello_world.png', options, (err) => { console.log(err) });
