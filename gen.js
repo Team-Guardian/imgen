@@ -18,7 +18,7 @@ const options = {
     },
     siteType: 'html'
 }
-//load html file in
+//load html file
 let htmlDoc = fs.readFileSync("html/index.html","utf8");
 // DOM
 let doc = jsdom.jsdom(htmlDoc);
@@ -50,5 +50,3 @@ for (var j = 0; j < imagesUri.length; j++){
     doc.getElementById("img1").src = imagesUri[j];
     webshot(doc.documentElement.outerHTML, `targets/hello_world${j}.png`, options, (err) => { console.log(err) });
 }
-
-//webshot(doc.documentElement.outerHTML, 'targets/hello_world.png', options, (err) => { console.log(err) });
