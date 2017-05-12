@@ -67,6 +67,7 @@ const add_rand_circle = function(svg, bg_w, bg_h){
         background_color: cc,
         alphanumeric: l,
         alphanumeric_color: tc,
+        iw: bg_w, ih: bg_h,
         x: cx - cr,
         y: cy - cr,
         w: cr, h: cr
