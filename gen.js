@@ -82,33 +82,40 @@ const add_rand_circle = function(svg, bg_w, bg_h){
 
 //uri of images to use for the bg make sure it's high rez
 const imagesUri = [
-    "https://www.lawnstarter.com/blog/wp-content/uploads/2015/01/Yellow-st-augustine-lawn.jpg",
-    "http://eskipaper.com/images/grass-3.jpg"
+    "https://www.lawnstarter.com/blog/wp-content/uploads/2015/01/Yellow-st-augustine-lawn.jpg"
 ];
 
 const targets = [];
-const num_samples_per_background = 100;
+const num_of_samples = 20;
+let promise = Promise.resolve(); 
+for( let i = 0; i < num_of_samples; i++){
+    promise = promise.then((result) =>{
+        return gen(i);
+    });
+}
 
-for (let b = 0; b < imagesUri.length; b++){
-    doc.getElementById("img1").src = imagesUri[b]; // select background
-    
-    for(let i=0; i< num_samples_per_background; i++){
+const gen = function(i) {
+    return new Promise((resolve,reject) => {
+        doc.getElementById("img1").src = imagesUri[Math.floor(Math.random() * imagesUri.length)]; // select background    
         svg.selectAll('.target').data([]).exit().remove(); // remove previous target
         let target = add_rand_circle(svg, bg_w, bg_h); // add a random target
-        if (target.background_color === target.alphanumeric_color){ continue; }
-        let id = `t_${b}_${i}.png`;
+        let id = `t_${i}.png`;
         target.id = id;
         targets.push(target);
         
         webshot(
             doc.documentElement.outerHTML,
             `targets/${id}`,
-            options, (err) => { if (err !== null){ console.log(err); } }
+            options, (err) => { 
+                if (err !== null){
+                    reject(`shit hit the fan ${err}`);
+                }else{
+                    resolve();
+                }
+            }
         );
-    }
+    });
 }
-
-
 fs.writeFile('targets/disc.txt', JSON.stringify({targets, targets_count: targets.length}), 'utf8', (err) => {
     if (err !== null){ console.log(err); }
 });
