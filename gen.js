@@ -50,15 +50,21 @@ const add_circle = function(svg, cr, cx, cy, cc, l, fs, tc){
 
 const add_rand_circle = function(svg, bg_w, bg_h){
     const colors = ['white', 'black', 'gray', 'red', 'blue', 'green', 'yellow', 'purple', 'brown', 'orange'];
-    const rand = (l, r) => Math.floor(Math.random() * (r - l + 1) + l);
+    const rand = (l, r, e) => {
+        for(let i = 0; i< 100; i++) {
+            let n = Math.floor(Math.random() * (r - l + 1) + l);
+            if (n !== e) { return n; }
+        }
+    }
+    
     const scale = Math.min(bg_w, bg_h);
     const
-        cr = rand(scale / 20, scale / 4),
+        cr = rand(scale / 20, scale / 10),
         cx = rand(cr / 2, bg_w - cr / 2),
         cy = rand(cr / 2, bg_h - cr / 2),
         cc = colors[rand(0, 9)],
         l = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(rand(0, 25)),
-        tc = colors[rand(0, 9)];
+        tc = colors[rand(0, 9, cc)];
         
     add_circle(svg, cr, cx, cy, cc, l, cr, tc);
     
@@ -81,7 +87,7 @@ const imagesUri = [
 ];
 
 const targets = [];
-const num_samples_per_background = 10;
+const num_samples_per_background = 100;
 
 for (let b = 0; b < imagesUri.length; b++){
     doc.getElementById("img1").src = imagesUri[b]; // select background
@@ -89,6 +95,7 @@ for (let b = 0; b < imagesUri.length; b++){
     for(let i=0; i< num_samples_per_background; i++){
         svg.selectAll('.target').data([]).exit().remove(); // remove previous target
         let target = add_rand_circle(svg, bg_w, bg_h); // add a random target
+        if (target.background_color === target.alphanumeric_color){ continue; }
         let id = `t_${b}_${i}.png`;
         target.id = id;
         targets.push(target);
