@@ -53,9 +53,9 @@ const add_rand_circle = function(svg, bg_w, bg_h){
     const rand = (l, r) => Math.floor(Math.random() * (r - l + 1) + l);
     const scale = Math.min(bg_w, bg_h);
     const
-        cr = rand(scale / 10, scale / 2),
-        cx = rand(0, bg_w),
-        cy = rand(0, bg_h),
+        cr = rand(scale / 20, scale / 4),
+        cx = rand(cr / 2, bg_w - cr / 2),
+        cy = rand(cr / 2, bg_h - cr / 2),
         cc = colors[rand(0, 9)],
         l = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(rand(0, 25)),
         tc = colors[rand(0, 9)];
