@@ -55,16 +55,18 @@ const add_rand_circle = function(svg, bg_w, bg_h){
             let n = Math.floor(Math.random() * (r - l + 1) + l);
             if (n !== e) { return n; }
         }
+        return -1;
     }
     
     const scale = Math.min(bg_w, bg_h);
     const
         cr = rand(scale / 20, scale / 10),
-        cx = rand(cr / 2, bg_w - cr / 2),
-        cy = rand(cr / 2, bg_h - cr / 2),
-        cc = colors[rand(0, 9)],
+        cx = rand(cr, bg_w - cr),
+        cy = rand(cr, bg_h - cr),
+        e = rand(0, 9),
+        cc = colors[e],
         l = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(rand(0, 25)),
-        tc = colors[rand(0, 9, cc)];
+        tc = colors[rand(0, 9, e)];
         
     add_circle(svg, cr, cx, cy, cc, l, cr, tc);
     
@@ -80,19 +82,13 @@ const add_rand_circle = function(svg, bg_w, bg_h){
     };
 };
 
-//uri of images to use for the bg make sure it's high rez
-const imagesUri = [
-    "https://www.lawnstarter.com/blog/wp-content/uploads/2015/01/Yellow-st-augustine-lawn.jpg"
-];
 
-const targets = [];
-const num_of_samples = 20;
-let promise = Promise.resolve(); 
-for( let i = 0; i < num_of_samples; i++){
-    promise = promise.then((result) =>{
-        return gen(i);
-    });
-}
+const multiplex = function(i, n){
+    return Promise.all(
+        [...Array(n)].map((e, k)=> gen(`${i}_${k}`))
+    );
+};
+
 
 const gen = function(i) {
     return new Promise((resolve,reject) => {
@@ -116,6 +112,26 @@ const gen = function(i) {
         );
     });
 }
+
+
+
+//uri of images to use for the bg make sure it's high rez
+const imagesUri = [
+    "https://www.lawnstarter.com/blog/wp-content/uploads/2015/01/Yellow-st-augustine-lawn.jpg"
+];
+
+const targets = [];
+const num_of_samples_per_iter = 10;
+const num_iter = 200;
+
+let promise = Promise.resolve(); 
+for( let i = 0; i < num_iter; i++){
+    promise = promise.then((result) =>{
+        return multiplex(i, num_of_samples_per_iter);
+    });
+}
+
+
 fs.writeFile('targets/disc.txt', JSON.stringify({targets, targets_count: targets.length}), 'utf8', (err) => {
     if (err !== null){ console.log(err); }
 });
