@@ -131,7 +131,8 @@ for( let i = 0; i < num_iter; i++){
     });
 }
 
-
-fs.writeFile('targets/disc.txt', JSON.stringify({targets, targets_count: targets.length}), 'utf8', (err) => {
-    if (err !== null){ console.log(err); }
+promise.then((result)=>{
+    fs.writeFile('targets/disc.txt', JSON.stringify({targets, targets_count: targets.length}), 'utf8', (err) => {
+        if (err !== null){ console.log(err); }
+    }); 
 });
