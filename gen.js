@@ -44,8 +44,7 @@ const add_circle = function(svg, cr, cx, cy, cc, l, fs, tc){
         .text(l)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
-        .attr('font-weight', 900)
-        .attr("font-family", "Arial")
+        .attr('font-family', 'Work Sans')
         .attr('font-size', fs)
         .attr('fill', tc);
 };
@@ -68,7 +67,7 @@ const add_rand_circle = function(svg, bg_w, bg_h){
         e = rand(0, 9),
         cc = colors[e],
         l = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(rand(0, 25)),
-        fs = Math.floor(cr * 1.3),
+        fs = Math.floor(cr * 1.6),
         tc = colors[rand(0, 9, e)];
         
     add_circle(svg, cr, cx, cy, cc, l, fs, tc);
