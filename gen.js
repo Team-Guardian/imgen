@@ -34,7 +34,7 @@ let svg = d3.select(doc.getElementById("test"))
 const add_circle = function(svg, cr, cx, cy, cc, l, fs, tc){
     let target = svg.append('g')
         .attr('class', 'target')
-        .attr('transform', 'translate(' + (cx - cr / 2)  + ',' + (cy - cr / 2) + ')');
+        .attr('transform', 'translate(' + (cx - cr)  + ',' + (cy - cr) + ')');
     
     target.append('circle')
         .attr('r', cr)
@@ -45,6 +45,7 @@ const add_circle = function(svg, cr, cx, cy, cc, l, fs, tc){
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-weight', 900)
+        .attr("font-family", "Arial")
         .attr('font-size', fs)
         .attr('fill', tc);
 };
@@ -80,7 +81,7 @@ const add_rand_circle = function(svg, bg_w, bg_h){
         iw: bg_w, ih: bg_h,
         x: cx - cr,
         y: cy - cr,
-        w: cr, h: cr
+        w: 2 * cr, h: 2 * cr
     };
 };
 
