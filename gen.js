@@ -34,8 +34,8 @@ let svg = d3.select(doc.getElementById("test"))
 const add_circle = function(svg, cr, cx, cy, cc, l, fs, tc){
     let target = svg.append('g')
         .attr('class', 'target')
-        .attr('transform', 'translate(' + (cx - cr)  + ',' + (cy - cr) + ')');
-    
+        .attr('transform', 'translate(' + cx  + ',' + cy + ')');
+        
     target.append('circle')
         .attr('r', cr)
         .attr('fill', cc);
@@ -87,7 +87,7 @@ const add_rand_circle = function(svg, bg_w, bg_h){
 
 const multiplex = function(i, n){
     return Promise.all(
-        [...Array(n)].map((e, k)=> gen(`${i}_${k}`))
+        Array(n).fill(0).map((e, k)=> gen(`${i}_${k}`))
     );
 };
 
