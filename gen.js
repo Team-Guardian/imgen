@@ -31,58 +31,67 @@ let svg = d3.select(doc.getElementById("test"))
     .attr('height', bg_w);
 
 // Target
-const add_circle = function(svg, cr, cx, cy, cc, l, fs, tc){
-    let target = svg.append('g')
-        .attr('class', 'target')
-        .attr('transform', 'translate(' + cx  + ',' + cy + ')');
-        
-    target.append('circle')
-        .attr('r', cr)
-        .attr('fill', cc);
-        
+const add_text = function(target, text, font_size, color, size){
     target.append('text')
-        .text(l)
+        .text(text).attr('x', size / 2).attr('y', size / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .attr('font-family', 'Work Sans')
-        .attr('font-size', fs)
-        .attr('fill', tc);
+        .attr('font-size', font_size)
+        .attr('fill', color);
+}
+const shift = function(svg, x, y) {
+    const target = svg.append('g')
+        .attr('class', 'target')
+        .attr('transform', 'translate(' + x  + ',' + y + ')');
+    return target;
+}
+const add_circle = function(target, size, color){
+    target.append('circle')
+        .attr('cx', size / 2)
+        .attr('cy', size / 2)
+        .attr('r', size / 2)
+        .attr('fill', color);
+    return 'circle';
 };
-
-const add_rand_circle = function(svg, bg_w, bg_h){
-    const colors = ['white', 'black', 'gray', 'red', 'blue', 'green', 'yellow', 'purple', 'brown', 'orange'];
-    const rand = (l, r, e) => {
-        for(let i = 0; i< 100; i++) {
-            let n = Math.floor(Math.random() * (r - l + 1) + l);
-            if (n !== e) { return n; }
-        }
-        return -1;
+const add_rect = function(target, size, color){
+    target.append('rect')
+        .attr('width', size)
+        .attr('height', size)
+        .attr('fill', color);
+    return 'rect';
+}
+const shape_fn = [add_circle, add_rect];
+const colors = ['white', 'black', 'gray', 'red', 'blue', 'green', 'yellow', 'purple', 'brown', 'orange'];
+const rand = (l, r, e) => {
+    for(let i = 0; i< 100; i++) {
+        let n = Math.floor(Math.random() * (r - l + 1) + l);
+        if (n !== e) { return n; }
     }
-    
-    const scale = Math.min(bg_w, bg_h);
-    const
-        cr = rand(scale / 10, scale / 7),
-        cx = rand(cr, bg_w - cr),
-        cy = rand(cr, bg_h - cr),
-        e = rand(0, 9),
-        cc = colors[e],
-        l = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(rand(0, 25)),
-        fs = Math.floor(cr * 1.6),
-        tc = colors[rand(0, 9, e)];
-        
-    add_circle(svg, cr, cx, cy, cc, l, fs, tc);
-    
+    return l;
+}
+const rand_param = function(bg_w, bg_h, colors){
+    const bg_min_dim = Math.min(bg_w, bg_h);
+    const size = rand(bg_min_dim / 5, bg_min_dim / 4);
+    const c = rand(0, 9);
     return {
-        shape: 'circle',
-        background_color: cc,
-        alphanumeric: l,
-        alphanumeric_color: tc,
-        iw: bg_w, ih: bg_h,
-        x: cx - cr,
-        y: cy - cr,
-        w: 2 * cr, h: 2 * cr
+        size,
+        x: rand(0, bg_w - size),
+        y: rand(0, bg_h - size),
+        shape_color: colors[c],
+        text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.charAt(rand(0, 35)),
+        text_size: Math.floor(size * 0.8),
+        text_color: colors[rand(0, 9, c)]
     };
-};
+}
+const add_random_target = function(svg, bg_w, bg_h, colors, shape_fn){
+    let p = rand_param(bg_w, bg_h, colors);
+    let target = shift(svg, p.x, p.y);
+    let shape = shape_fn[Math.floor(Math.random() * shape_fn.length)](target, p.size, p.shape_color);
+    add_text(target, p.text, p.text_size, p.text_color, p.size);
+    p.shape = shape;
+    return p;
+}
 
 
 const multiplex = function(i, n){
@@ -96,7 +105,7 @@ const gen = function(i) {
     return new Promise((resolve,reject) => {
         doc.getElementById("img1").src = imagesUri[Math.floor(Math.random() * imagesUri.length)]; // select background    
         svg.selectAll('.target').data([]).exit().remove(); // remove previous target
-        let target = add_rand_circle(svg, bg_w, bg_h); // add a random target
+        let target = add_random_target(svg, bg_w, bg_h, colors, shape_fn); // add a random target
         let id = `t_${i}.png`;
         target.id = id;
         targets.push(target);
@@ -123,8 +132,8 @@ const imagesUri = [
 ];
 
 const targets = [];
-const num_of_samples_per_iter = 10;
-const num_iter = 200;
+const num_of_samples_per_iter = 4;
+const num_iter = 3;
 
 let promise = Promise.resolve(); 
 for( let i = 0; i < num_iter; i++){
