@@ -49,10 +49,10 @@ const VIS = (function(){
             .attr('font-size', font_size)
             .attr('fill', color);
     }  
-    const shift = function(svg, x, y) {
+    const shift = function(svg, x, y, o) {
         const target = svg.append('g')
             .attr('class', 'target')
-            .attr('transform', 'translate(' + x  + ',' + y + ')');
+            .attr('transform', 'translate(' + x  + ',' + y + ')' + ' rotate(' + o + ')');
         return target;
     }
     const add_circle = function(target, size, color){
@@ -84,6 +84,7 @@ const VIS = (function(){
         const c = rand(0, 9);
         return {
             size,
+            ori: rand(0, 7) * 45,
             x: rand(0, bg_w - size),
             y: rand(0, bg_h - size),
             shape_color: colors[c],
@@ -94,7 +95,7 @@ const VIS = (function(){
     }
     const add_random_target = function(svg, bg_w, bg_h, colors){
         let p = rand_param(bg_w, bg_h, colors);
-        let target = shift(svg, p.x, p.y);
+        let target = shift(svg, p.x, p.y, p.ori);
         let shape = shape_fn[Math.floor(Math.random() * shape_fn.length)](target, p.size, p.shape_color);
         add_text(target, p.text, p.text_size, p.text_color, p.size);
         p.shape = shape;
@@ -133,7 +134,7 @@ const gen = function(id) {
 // RUN
 const targets = [];
 const num_of_samples_per_iter = 10;
-const num_iter = 1000;
+const num_iter = 2000;
 
 let promise = Promise.resolve(); 
 for(let itr = 0; itr < num_iter; itr++){
