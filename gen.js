@@ -9,7 +9,7 @@ const
 // SGV Dimontions
 const
     bg_w = 800,
-    bg_h = 400;
+    bg_h = 800;
 
 // WebShot Options
 const options = {
@@ -35,7 +35,9 @@ const colors = ['white', 'black', 'gray', 'red', 'blue', 'green', 'yellow', 'pur
 
 // uri of images to use for the bg make sure it's high rez
 const imagesUri = [
-    "https://www.lawnstarter.com/blog/wp-content/uploads/2015/01/Yellow-st-augustine-lawn.jpg"
+    "https://cdn.pixabay.com/photo/2015/03/30/12/46/green-698640_1280.jpg",
+    "http://2.bp.blogspot.com/-puf67r5jajs/VAG7JDGdTTI/AAAAAAAAD6w/5l9DjpoTZXA/s1600/marcelling%2Bof%2Bbentgrass%2Bputting%2Bgreen%2Bvalley%2Bview%2B2007%2Ba%2Bcropped.JPG", 
+    "http://sciencenordic.com/sites/default/files/1_3.jpg"
 ];
 
 // Target
@@ -63,14 +65,22 @@ const VIS = (function(){
             .attr('fill', color);
         return 'circle';
     };
-    const add_rect = function(target, size, color){
+    const add_square = function(target, size, color){
         target.append('rect')
             .attr('width', size)
             .attr('height', size)
             .attr('fill', color);
         return 'rect';
     }
-    const shape_fn = [add_circle, add_rect];
+    const add_rect = function (target, size, color) {
+        target.append('rect')
+            .attr('width', size * 1.7)
+            .attr('height', size)
+            .attr('fill', color);
+        return 'rect';
+    }
+    
+    const shape_fn = [add_circle, add_rect, add_square];
     const rand = (l, r, e) => {
         for(let i = 0; i< 100; i++) {
             let n = Math.floor(Math.random() * (r - l + 1) + l);
@@ -80,7 +90,7 @@ const VIS = (function(){
     }
     const rand_param = function(bg_w, bg_h, colors){
         const bg_min_dim = Math.min(bg_w, bg_h);
-        const size = rand(bg_min_dim / 5, bg_min_dim / 4);
+        const size = rand(bg_min_dim / 30, bg_min_dim / 24);
         const c = rand(0, 9);
         return {
             size,
